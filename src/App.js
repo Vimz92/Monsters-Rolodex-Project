@@ -26,7 +26,11 @@ componentDidMount(){
     return ( 
       <div className='App'>
         
-        <input type='search' placeholder="Search Items" onChange={(e) => e.target.value} />
+        <input type='search' placeholder="Search Items" onChange={(e) => {
+ 
+        }
+       
+        } />
         {
           this.state.monsters.map((monster)=> {
             return <h1> {monster.name} </h1> 
