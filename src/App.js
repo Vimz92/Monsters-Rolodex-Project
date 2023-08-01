@@ -1,45 +1,56 @@
-import { Component } from 'react'
-import React from 'react'
+import { Component } from "react";
+import React from "react";
+import SearchBar from "./components/searchbar/searchbar";
+import Items from "./components/Items/item";
+import './App.css'
 
 class App extends Component {
+  constructor() {
+    super();
 
-constructor() {
-  super()
-
-  this.state = {
-    monsters : []
+    this.state = {
+      monsters : [],
+      searchField : ''
+    } 
+      
   }
-}
 
-componentDidMount(){
+
+componentDidMount() {
   fetch('https://jsonplaceholder.typicode.com/users')
-  .then((response) => response.json())
-  .then((users) => { 
-  this.setState({monsters : users})
-  })
-  .catch((err) => err)
+  .then((res) => res.json())
+  .then((users) => 
+  this.setState(() => {
+    return {monsters: users}
+  }))
 }
 
+onSearchChange = (e) => {
+  const searchField = e.target.value.toLocaleLowerCase();
+  this.setState(() => {
+    return {searchField}
+  })
+}
 
+render () {
+  const{ searchField } = this.state
+  const{ onSearchChange } = this;
+  const filteredItems = this.state.monsters.filter((monster) => {
+    return monster.name.toLocaleLowerCase().includes(searchField)
+  })
 
-  render() {
-    return ( 
-      <div className='App'>
-        
-        <input type='search' placeholder="Search Items" onChange={(e) => {
- 
-        }
-       
-        } />
-        {
-          this.state.monsters.map((monster)=> {
-            return <h1> {monster.name} </h1> 
-           
-          })
-        }
-      </div>
-    )
-  }
+  return(
+    <> 
+    <h1> Monsters Rolodex </h1>
+    <SearchBar onChangeHandler={onSearchChange} placeholder="search items" className="monster-search-box" />
+    <div className="App"> 
+
+    <Items monsters={filteredItems} />
+    </div>
+    </>
+  )
+}
+
 }
 
 export default App;
